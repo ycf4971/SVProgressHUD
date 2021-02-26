@@ -67,12 +67,14 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 + (SVProgressHUD*)sharedView {
     static dispatch_once_t once;
    UIWindow *window ;
-   UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
-   if([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]){
-       window = [(id <UIWindowSceneDelegate>)scene.delegate window];
-   }else{
-     window = [[[UIApplication sharedApplication]delegate]window];
-   }
+    if (@available(iOS 13.0, *)) {
+        UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
+        if([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]){
+            window = [(id <UIWindowSceneDelegate>)scene.delegate window];
+        }
+    } else {
+        window = [[[UIApplication sharedApplication]delegate]window];
+    }
     static SVProgressHUD *sharedView;
 #if !defined(SV_APP_EXTENSIONS)
   dispatch_once(&once, ^{ sharedView = [[self alloc] initWithFrame:[window bounds]];});
@@ -434,7 +436,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
         _ringNoTextRadius = 24.0f;
         
         _cornerRadius = 14.0f;
-		
+        
         _graceTimeInterval = 0.0f;
         _minimumDismissTimeInterval = 5.0;
         _maximumDismissTimeInterval = CGFLOAT_MAX;
@@ -658,11 +660,13 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 
 #if !defined(SV_APP_EXTENSIONS) && TARGET_OS_IOS
    UIWindow *window ;
-    UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
-    if([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]){
-        window = [(id <UIWindowSceneDelegate>)scene.delegate window];
-    }else{
-      window = [[[UIApplication sharedApplication]delegate]window];
+    if (@available(iOS 13.0, *)) {
+        UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
+        if([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]){
+            window = [(id <UIWindowSceneDelegate>)scene.delegate window];
+        }
+    } else {
+        window = [[[UIApplication sharedApplication]delegate]window];
     }
     self.frame = [window bounds];
     UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
@@ -1246,12 +1250,14 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 #if !defined(SV_APP_EXTENSIONS)
   
   UIWindow *window ;
-  UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
-  if([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]){
-      window = [(id <UIWindowSceneDelegate>)scene.delegate window];
-  }else{
-    window = [[[UIApplication sharedApplication]delegate]window];
-  }
+    if (@available(iOS 13.0, *)) {
+        UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
+        if([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]){
+            window = [(id <UIWindowSceneDelegate>)scene.delegate window];
+        }
+    } else {
+        window = [[[UIApplication sharedApplication]delegate]window];
+    }
   
     CGRect windowBounds = [window bounds];
     _controlView.frame = windowBounds;
@@ -1405,7 +1411,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
         BOOL windowIsVisible = !window.hidden && window.alpha > 0;
         BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal && window.windowLevel <= self.maxSupportedWindowLevel);
         BOOL windowKeyWindow = window.isKeyWindow;
-			
+            
         if(windowOnMainScreen && windowIsVisible && windowLevelSupported && windowKeyWindow) {
             return window;
         }
@@ -1461,15 +1467,15 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 
 #if TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
 - (UINotificationFeedbackGenerator *)hapticGenerator NS_AVAILABLE_IOS(10_0) {
-	// Only return if haptics are enabled
-	if(!self.hapticsEnabled) {
-		return nil;
-	}
-	
-	if(!_hapticGenerator) {
-		_hapticGenerator = [[UINotificationFeedbackGenerator alloc] init];
-	}
-	return _hapticGenerator;
+    // Only return if haptics are enabled
+    if(!self.hapticsEnabled) {
+        return nil;
+    }
+    
+    if(!_hapticGenerator) {
+        _hapticGenerator = [[UINotificationFeedbackGenerator alloc] init];
+    }
+    return _hapticGenerator;
 }
 #endif
 
@@ -1573,3 +1579,4 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 }
 
 @end
+
